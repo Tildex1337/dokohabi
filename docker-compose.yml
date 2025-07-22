@@ -1,0 +1,12 @@
+services:
+  backend:
+    build:
+      context: ./backend/
+      dockerfile: Dockerfile
+    container_name: dokohabi-backend
+  frontend:
+    build:
+      context: ./frontend/
+      dockerfile: Dockerfile
+    container_name: dokohabi-frontend
+
