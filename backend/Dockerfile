@@ -8,6 +8,6 @@ RUN go mod download
 
 COPY . .
 
-RUN go build -o tildex-backend
+RUN go build -o dokohabi-backend
 
-CMD ["/build/tildex-backend"]
+CMD ["/build/dokohabi-backend"]

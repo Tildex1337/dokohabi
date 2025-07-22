@@ -3,10 +3,10 @@ services:
     build:
       context: ./backend/
       dockerfile: Dockerfile
-    container_name: tildex-backend
+    container_name: dokohabi-backend
   frontend:
     build:
       context: ./frontend/
       dockerfile: Dockerfile
-    container_name: tildex-frontend
+    container_name: dokohabi-frontend
 
