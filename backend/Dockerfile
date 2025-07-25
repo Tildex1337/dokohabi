@@ -1,13 +1,13 @@
-FROM golang:bookworm AS base
+FROM golang:bookworm
 
-WORKDIR /build
+RUN go install github.com/air-verse/air@latest
+
+WORKDIR /app
 
 COPY go.mod go.sum ./
-
 RUN go mod download
 
 COPY . .
 
-RUN go build -o dokohabi-backend
+CMD ["air"]
 
-CMD ["/build/dokohabi-backend"]

@@ -1,12 +1,66 @@
+version: "3.8"
+
 services:
   backend:
     build:
-      context: ./backend/
+      context: ./backend
       dockerfile: Dockerfile
     container_name: dokohabi-backend
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=postgres://user:password@db:5432/dokohabi
+
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - ./backend:/app
+      - air-cache:/go/pkg/mod
+    networks:
+      - dokohabi_default
+
   frontend:
     build:
-      context: ./frontend/
+      context: ./frontend
       dockerfile: Dockerfile
     container_name: dokohabi-frontend
+    ports:
+      - "5173:5173"
+    environment:
+      - VITE_API_URL=http://backend:8000
+    depends_on:
+      - backend
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    networks:
+      - dokohabi_default
+
+  db:
+    image: postgres:15
+    container_name: dokohabi-db
+    ports:
+      - "5432:5432"
+    environment:
+     - POSTGRES_USER=user
+     - POSTGRES_PASSWORD=password
+     - POSTGRES_DB=dokohabi
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -d $${POSTGRES_DB} -U $${POSTGRES_USER}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - dokohabi_default
+
+volumes:
+  db-data:
+  air-cache:
+
+networks:
+  dokohabi_default:
+    driver: bridge
 
